@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest author="lwq">
+
+	<parameters>
+		<parameter name="compress_ratio" default-value="0.1" type="Float" min="0.1" max="0.3"/>
+	</parameters>
+	
+    <application
+        name="BuildingDetection">
+		
+        <module
+            name="Client"
+			entrance-file="client.rb"
+			location="client"
+			reusable="true">
+            <require-file name="rf.rb"/>
+            <related-module name="Preprocessor" IF="1" grouping="Direct"/>
+        </module>
+         
+        <module
+            name="Preprocessor"
+			entrance-file="preprocessor.rb"
+			location="random"
+			reusable="true">
+			<require-file name="SCALE.jar"/>
+			<adjustable-parameter name="compress_ratio"/>
+            <related-module name="FeatureExtractor" IF="1" grouping="Grouping"/>
+        </module>
+		 
+		<module
+		    name="FeatureExtractor"
+			entrance-file="feature_extractor.rb"
+			location="random"
+			reusable="true"> 
+			<require-file name="SIFT.jar"/>
+			<related-module name="FingerprintMaker" IF="1" grouping="Direct"/>
+		</module>
+		
+		<module
+		    name="FingerprintMaker"
+			entrance-file="fingerprint_maker.rb"
+			location="random"
+			reusable="true"> 
+			<require-file name="BOF.jar"/>
+			<resource const-name="DIC" dir="dictionary"/>
+			<related-module name="ImageMatcher" IF="1" grouping="Direct"/>
+		</module>
+		
+		<module
+		    name="ImageMatcher"
+			entrance-file="image_matcher.rb"
+			location="random"
+			reusable="true"> 
+			<resource const-name="MODEL" dir="model.txt"/>
+			<require-file name="SVM.jar"/>
+			<related-module name="Client" IF="1" grouping="Direct"/>
+		</module>		
+    </application>
+
+</manifest>
